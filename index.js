@@ -6,7 +6,7 @@ const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const res = require('express/lib/response');
 
 
-const port = process.env.PORT || 5000
+const port = process.env.PORT || 5000;
 
 // use middleware
 app.use(cors())
@@ -32,11 +32,12 @@ async function run() {
         })
         app.get('/inventory/:id', async (req, res) => {
             const id = req.params.id;
-            const query = { _id: ObjectId(id) }
+            console.log(id)
+            const query = { _id: ObjectId(id) };
+            // to find one we use findONE
             const inventory = await productCollection.findOne(query)
             res.send(inventory)
         })
-
 
         app.get('/inventoryCount', async (req, res) => {
             const query = {}
