@@ -2,7 +2,10 @@ const express = require('express')
 const app = express()
 const cors = require('cors')
 require('dotenv').config()
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+const res = require('express/lib/response');
+
+
 const port = process.env.PORT || 5000
 
 // use middleware
@@ -17,7 +20,30 @@ async function run() {
         // to connect client
         await client.connect();
         console.log('all connected');
-        const userCollection = client.db("purePerfume").collection("devices");
+        const productCollection = client.db("purePerfume").collection("inventory");
+        // to load data
+        app.get('/inventory', async (req, res) => {
+            const query = {}
+            // cursor for multiple item
+            const cursor = productCollection.find(query)
+            const inventories = await cursor.toArray()
+            res.send(inventories)
+            console.log(inventories);
+        })
+        app.get('/inventory/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) }
+            const inventory = await productCollection.findOne(query)
+            res.send(inventory)
+        })
+
+
+        app.get('/inventoryCount', async (req, res) => {
+            const query = {}
+            const cursor = productCollection.find(query);
+            const count = await cursor.count()
+            res.send({ count })
+        })
     }
     finally {
 
