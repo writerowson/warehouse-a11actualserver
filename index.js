@@ -28,7 +28,10 @@ async function run() {
         await client.connect();
         console.log('all connected');
         const productCollection = client.db("purePerfume").collection("inventory");
+        const deliverCollection = client.db("purePerfume").collection("deliver");
         const userCollection = client.db("purePerfume").collection("user");
+
+
         // to load all data
         app.get('/inventory', async (req, res) => {
             const query = {}
